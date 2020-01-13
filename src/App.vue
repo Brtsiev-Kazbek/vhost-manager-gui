@@ -271,8 +271,8 @@ toastr.options = {
 	"hideMethod": "fadeOut"
 }
 
-// const PORT = "8080";
-const URL = `http://d4bdff82.ngrok.io/api`;
+const PORT = "8080";
+const URL = `localhost:${PORT}/api`;
 
 export default {
   name: 'app',
