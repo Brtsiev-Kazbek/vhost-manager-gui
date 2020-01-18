@@ -356,7 +356,7 @@ export default {
 
 <style>
 		.list {
-			margin-top: 4s0px;
+			margin-top: 40px;
 		}
 		.title-wrapper {
 			display: flex;
