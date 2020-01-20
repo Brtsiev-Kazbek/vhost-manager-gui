@@ -1,5 +1,7 @@
 # vhost-gui
 
+[Try it on github.io](https://brtsiev-kazbek.github.io/vhost-manager-gui/)
+
 ## Project setup
 ```
 npm install
