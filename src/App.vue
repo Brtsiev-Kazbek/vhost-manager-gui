@@ -2,10 +2,10 @@
 	<div id="app">
 		<app-header>Vhost-manager</app-header>
 		<div class="container">
-			<item-creator @app:create="createItem" />
+			<item-creator @app:create="createItem" @app:search="searchHost" />
 			<div class="list">
 				<app-item
-				v-for="(host, index) in hosts" :key="index"
+				v-for="(host, index) in visibleHosts" :key="index"
 				:host="host"
 				:id="index"
 				@app:delete="deleteItem"
@@ -250,7 +250,7 @@ button.toast-close-button {
 import appHeader from './components/Header.vue';
 import appItem from './components/HostItem.vue'
 import toastr from 'toastr';
-import { setInterval } from 'timers';
+// import { setInterval } from 'timers';
 import itemCreator from './components/ItemsCreator.vue'
 
 toastr.options = {
@@ -272,7 +272,8 @@ toastr.options = {
 }
 
 const PORT = "8080";
-const URL = `localhost:${PORT}/api`;
+const URL = `http://localhost:${PORT}/api`;
+// const URL = 'http://b3080552.ngrok.io/api';
 
 export default {
   name: 'app',
@@ -285,7 +286,7 @@ export default {
 	return {
 		status: 'stopped',
 		hosts: [],
-		visibleHosts: [],
+    visibleHosts: [],
 		msg: ''
 	}
   },
@@ -301,10 +302,19 @@ export default {
 		deep: true
 	},
 	hosts() {
-		this.getHosts();
+		this.visibleHosts = this.hosts;
 	}
   },
   methods: {
+    searchHost(name) {
+      if(name.trim() === '') {
+        this.visibleHosts = this.hosts;
+      } else {
+        this.visibleHosts = this.hosts.filter(host => {
+          return host.url.includes(name);
+        })
+      }
+    },
 	async getStatus() {
 		const res = await fetch(`${URL}/status`)
 		const json = await res.json();
@@ -339,6 +349,7 @@ export default {
 		} else {
 			toastr.error("This host is already exists");
 		}
+    await this.getHosts();
 	},
 	showData(value) {
 		toastr.success(value.normalize())
@@ -347,9 +358,14 @@ export default {
 		toastr.error(value.normalize());
 	}
   },
-	mounted() {
-		this.getHosts();
-		setInterval(this.getHosts, 30000); //TODO: Переписать на рекурсивный Timeout
+	async mounted() {
+    await this.getHosts();
+    this.visibleHosts = this.hosts;
+    setInterval(this.getHosts, 30000); //TODO: Переписать на рекурсивный Timeout
+    // setTimeout( function interval() {
+    //   this.getHosts();
+    //   setTimeout(interval, 10000)
+    // }, 10000);
   }
 }
 </script>

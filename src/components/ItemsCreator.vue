@@ -1,6 +1,6 @@
 <template>
     <div class="creator creator-flex valign">
-        <input type="text" placeholder="Create a host" v-model="hostName" title="Spaces are automatically replaced by dots">
+        <input type="text" placeholder="Create a host" v-model="hostName" title="Spaces are automatically replaced by dots" @input="searchHost">
         <div class="waves-effect waves-teal btn green add" @click="addHost">
         <i class="material-icons">add</i>
     </div>
@@ -18,8 +18,11 @@ export default {
         addHost() {
             this.$emit('app:create', this.hostName);
             this.hostName = ''
+        },
+        searchHost() {
+            this.$emit('app:search', this.hostName)
         }
-    }
+    },
 }
 </script>
 
